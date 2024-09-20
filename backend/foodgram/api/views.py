@@ -9,9 +9,7 @@ from django.http import HttpResponse
 from rest_framework.views import APIView
 from django.db.models import Sum
 from django.shortcuts import get_object_or_404
-from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.permissions import IsAuthenticated
-from rest_framework_simplejwt.authentication import JWTAuthentication
 from django.contrib.auth import login
 from rest_framework_simplejwt.tokens import AccessToken
 from django.contrib.auth import authenticate
