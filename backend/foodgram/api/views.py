@@ -13,7 +13,7 @@ from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.decorators import action
 from django_filters.rest_framework import DjangoFilterBackend
 from api.permissions import IsAuthorOrReadOnly
-from api.filters import RecipeFilter
+from api.filters import RecipeFilter, IngredientFilter
 
 
 class UserViewSet(UserViewSet):
@@ -57,6 +57,8 @@ class IngredientViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = IngredientSerializer
     pagination_class = None
     queryset = Ingredient.objects.all()
+    filter_backends = (DjangoFilterBackend,)
+    filterset_class = IngredientFilter
 
 
 class RecipeViewSet(viewsets.ModelViewSet):
