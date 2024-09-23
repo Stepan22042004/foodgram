@@ -41,14 +41,14 @@ class TagSerializer(serializers.ModelSerializer):
     class Meta:
         model = Tag
         lookup_field = 'name'
-        fields = ('name', 'slug')
+        fields = ('id', 'name', 'slug')
 
 
 class IngredientSerializer(serializers.ModelSerializer):
     class Meta:
         model = Ingredient
         lookup_field = 'name'
-        fields = ('name', 'measurement_unit')
+        fields = ('id', 'name', 'measurement_unit')
 
 
 class RecipeIngredientSerializer(serializers.ModelSerializer):

@@ -15,7 +15,7 @@ class User(AbstractUser):
     first_name = models.CharField(max_length=30)
     last_name = models.CharField(max_length=30)
     avatar = models.ImageField(
-        upload_to='media/avatars/',
+        upload_to='users/avatars/',
         verbose_name='аватар',
         blank=True,
         null=True
@@ -60,7 +60,7 @@ class Recipe(models.Model):
         related_name='recipes',
     )
     title = models.CharField(max_length=100)
-    image = models.ImageField(upload_to='media/recipes/')
+    image = models.ImageField(upload_to='recipe/images')
     text = models.TextField()
     ingredients = models.ManyToManyField(
         Ingredient,
