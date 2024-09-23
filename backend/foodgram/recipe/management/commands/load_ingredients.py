@@ -30,7 +30,7 @@ class Command(BaseCommand):
 
         print("Загрузка данных об ингредиентах")
 
-        with open('C:/Users/mrger/OneDrive/Рабочий стол/Dev/foodgram/data/ingredients.csv', 'r', encoding='utf-8') as csvfile:
+        with open('data/ingredients.csv', 'r') as csvfile:
             reader = csv.reader(csvfile)
             for row in reader:
                 name = row[0]

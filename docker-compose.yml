@@ -3,8 +3,9 @@ version: '3'
 
 volumes:
   pg_data:
-  # Новый volume — для статических файлов
   static:
+  media:
+  redoc:
 
 services:
   db:
@@ -17,7 +18,9 @@ services:
     env_file: .env
     # Тут подключаем volume к backend
     volumes:
-      - static:/backend_static
+      - media:/app/media
+      - redoc:/app/api/docs/
+      - static:/backend_static/
   frontend:
     env_file: .env
     build: ./frontend/
@@ -28,6 +31,6 @@ services:
     # А тут подключаем volume со статикой к gateway
     volumes:
       - static:/staticfiles/
-      - ./frontend/build:/usr/share/nginx/html/
+      - media:/app/media
     ports:
       - 8000:80
