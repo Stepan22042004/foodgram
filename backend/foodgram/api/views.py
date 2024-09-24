@@ -132,7 +132,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
         Возвращает короткую ссылку на рецепт.
         """
         recipe = self.get_object()
-        link = request.build_absolute_uri(f'/api/r/{recipe.short_url}')
+        link = request.build_absolute_uri(f'/api/r/{recipe.short_code}')
         return Response({'short-link': link})
 
     @action(
