@@ -261,3 +261,12 @@ class SubscriptionViewSet(viewsets.ReadOnlyModelViewSet):
         Возвращает список подписок текущего пользователя.
         """
         return Subscription.objects.filter(user=self.request.user)
+
+
+def redirect_to_recipe(request, short_code):
+    """
+    Перенаправляет на полный URL рецепта по короткому коду.
+    """
+    recipe = get_object_or_404(Recipe, short_code=short_code)
+    return redirect(f'/recipes/{recipe.id}')
+
