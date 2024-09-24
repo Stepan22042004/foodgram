@@ -17,7 +17,7 @@ from rest_framework.decorators import action
 from django_filters.rest_framework import DjangoFilterBackend
 from api.permissions import IsAuthorOrReadOnly
 from api.filters import RecipeFilter, IngredientFilter
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, redirect
 
 
 class UserViewSet(UserViewSet):
