@@ -1,9 +1,7 @@
 from rest_framework import serializers
-from recipe.models import Tag, Ingredient, RecipeIngredient, Recipe, Favorite, ShoppingCart, Subscription
-from recipe.models import User  # Импортируйте вашу пользовательскую модель
-from django.contrib.auth.hashers import make_password
-from rest_framework_simplejwt.tokens import RefreshToken
-from djoser.serializers import UserCreateSerializer
+from recipe.models import (Tag, Ingredient, RecipeIngredient,
+                           Recipe, Favorite, ShoppingCart, Subscription)
+from recipe.models import User
 from drf_extra_fields.fields import Base64ImageField
 
 

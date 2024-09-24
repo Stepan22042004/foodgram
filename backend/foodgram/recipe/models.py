@@ -4,10 +4,13 @@ from django.conf import settings
 from django.utils.crypto import get_random_string
 
 
-
 class User(AbstractUser):
     """Кастомная модель пользователя, наследуемая от AbstractUser."""
-    username = models.CharField(max_length=50, unique=True, verbose_name='Имя пользователя')
+    username = models.CharField(
+        max_length=50,
+        unique=True,
+        verbose_name='Имя пользователя'
+    )
     email = models.EmailField(unique=True)
     first_name = models.CharField(max_length=30)
     last_name = models.CharField(max_length=30)
@@ -19,7 +22,6 @@ class User(AbstractUser):
     )
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ('first_name', 'last_name', 'username',)
-
 
     class Meta:
         verbose_name = 'пользователь'
@@ -60,7 +62,11 @@ class Recipe(models.Model):
     title = models.CharField(max_length=100)
     image = models.ImageField(upload_to='recipe/images')
     text = models.TextField()
-    ingredients = models.ManyToManyField(Ingredient, through='RecipeIngredient', related_name='recipes',)
+    ingredients = models.ManyToManyField(
+        Ingredient,
+        through='RecipeIngredient',
+        related_name='recipes'
+    )
     tags = models.ManyToManyField(Tag)
     cooking_time = models.PositiveIntegerField()
     short_url = models.CharField(
@@ -89,7 +95,11 @@ class Recipe(models.Model):
 
 
 class RecipeIngredient(models.Model):
-    recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE, related_name='recipe_ingredients',)
+    recipe = models.ForeignKey(
+        Recipe,
+        on_delete=models.CASCADE,
+        related_name='recipe_ingredients'
+    )
     ingredient = models.ForeignKey(Ingredient, on_delete=models.CASCADE)
     amount = models.DecimalField(max_digits=10, decimal_places=2)
 
