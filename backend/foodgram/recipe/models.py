@@ -80,17 +80,17 @@ class Recipe(models.Model):
     def __str__(self):
         return self.title
 
-    def generate_short_url(self):
+    def generate_short_code(self):
         """Генерирует уникальный короткий код."""
         while True:
-            short_url = get_random_string(length=10)
-            if not Recipe.objects.filter(short_url=short_url).exists():
-                return short_url
+            short_code = get_random_string(length=10)
+            if not Recipe.objects.filter(short_code=short_code).exists():
+                return short_code
 
     def save(self, *args, **kwargs):
         """Переопределяем метод save для генерации короткого кода."""
-        if not self.short_url:
-            self.short_url = self.generate_short_url()
+        if not self.short_code:
+            self.short_code = self.generate_short_code()
         super().save(*args, **kwargs)
 
 
