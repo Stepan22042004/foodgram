@@ -43,6 +43,49 @@ class UserViewSet(UserViewSet):
         user.save()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
+    @action(
+        detail=True,
+        methods=['post'],
+        url_path='subscribe',
+        permission_classes=(IsAuthenticated,)
+    )
+    def subscribe(self, request, id=None):
+        """
+        Создает подписку на другого пользователя.
+        """
+        subscribed_to = get_object_or_404(User, id=id)
+
+        data = {'subscribed_to': subscribed_to.id}
+
+        serializer = SubscribeSerializer(
+            data=data, context={'request': request}
+        )
+
+        serializer.is_valid(raise_exception=True)
+
+        serializer.save()
+
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+    @subscribe.mapping.delete
+    def delete_subscribe(self, request, id=None):
+        """
+        Удаляет подписку на другого пользователя.
+        """
+        current_user = request.user
+        subscribed_to_user = get_object_or_404(User, id=id)
+        delete_cnt, _ = Subscription.objects.filter(
+            user=current_user, subscribed_to=subscribed_to_user
+        ).delete()
+
+        if not delete_cnt:
+            return Response(
+                {"detail": "Вы не подписаны на этого пользователя."},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        return Response(status=status.HTTP_204_NO_CONTENT)	
+
 
 class TagViewSet(viewsets.ReadOnlyModelViewSet):
     """Представление для управления отзывами."""

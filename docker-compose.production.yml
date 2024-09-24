@@ -1,4 +1,3 @@
-# Файл docker-compose.yml
 version: '3'
 
 volumes:
@@ -13,24 +12,30 @@ services:
     env_file: .env
     volumes:
       - pg_data:/var/lib/postgresql/data
+
   backend:
-    build: ./backend/foodgram/
+    image: stepan2204/foodgram_backend
     env_file: .env
-    # Тут подключаем volume к backend
     volumes:
       - media:/app/media
-      - redoc:/app/api/docs/
       - static:/backend_static/
+    depends_on:
+      - db
+
   frontend:
     env_file: .env
-    build: ./frontend/
+    image: stepan2204/foodgram_frontend
     volumes:
       - ./frontend/:/app/result_build/
+
   gateway:
-    build: ./infra/
-    # А тут подключаем volume со статикой к gateway
+    image: stepan2204/foodgram_gateway
+    env_file: .env
     volumes:
       - static:/staticfiles/
       - media:/app/media
+    depends_on:
+      - backend
+      - frontend
     ports:
       - 8000:80
