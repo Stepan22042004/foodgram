@@ -69,7 +69,7 @@ class Recipe(models.Model):
     )
     tags = models.ManyToManyField(Tag)
     cooking_time = models.PositiveIntegerField()
-    short_url = models.CharField(
+    short_code = models.CharField(
         max_length=200,
         unique=True,
         blank=True,
