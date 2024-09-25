@@ -7,7 +7,7 @@ router = DefaultRouter()
 router.register('tags', TagViewSet, basename='tag')
 router.register('ingredients', IngredientViewSet, basename='ingredient')
 router.register(
-    'users/subscriptions', SubscriptionViewSet, basename='subscriptions'        
+    'users/subscriptions', SubscriptionViewSet, basename='subscriptions'
 )
 router.register('users', UserViewSet, basename='users')
 router.register('recipes', RecipeViewSet, basename='recipes')

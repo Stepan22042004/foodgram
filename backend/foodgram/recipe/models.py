@@ -81,14 +81,12 @@ class Recipe(models.Model):
         return self.title
 
     def generate_short_code(self):
-        """Генерирует уникальный короткий код."""
         while True:
             short_code = get_random_string(length=10)
             if not Recipe.objects.filter(short_code=short_code).exists():
                 return short_code
 
     def save(self, *args, **kwargs):
-        """Переопределяем метод save для генерации короткого кода."""
         if not self.short_code:
             self.short_code = self.generate_short_code()
         super().save(*args, **kwargs)
@@ -104,13 +102,10 @@ class RecipeIngredient(models.Model):
     amount = models.DecimalField(max_digits=10, decimal_places=2)
 
     def __str__(self):
-        return f"{self.amount} of {self.ingredient.name} in {self.recipe.title}"
+        return f"{self.amount}, {self.ingredient.name}, {self.recipe.title}"
 
 
 class UserRecipeBase(models.Model):
-    """
-    Базовая модель для связи пользователя с рецептом.
-    """
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
@@ -136,9 +131,6 @@ class UserRecipeBase(models.Model):
 
 
 class Favorite(UserRecipeBase):
-    """
-    Модель избранного.
-    """
 
     class Meta(UserRecipeBase.Meta):
         default_related_name = 'favorites'
@@ -156,9 +148,6 @@ class Favorite(UserRecipeBase):
 
 
 class ShoppingCart(UserRecipeBase):
-    """
-    Модель корзины покупок.
-    """
 
     class Meta(UserRecipeBase.Meta):
         default_related_name = 'shopping_carts'
@@ -176,9 +165,6 @@ class ShoppingCart(UserRecipeBase):
 
 
 class Subscription(models.Model):
-    """
-    Модель подписки.
-    """
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
