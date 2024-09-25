@@ -3,7 +3,6 @@ volumes:
   pg_data:
   static:
   media:
-  redoc:
 
 services:
   db:
