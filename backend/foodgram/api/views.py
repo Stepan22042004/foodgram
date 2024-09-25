@@ -20,6 +20,15 @@ from api.filters import RecipeFilter, IngredientFilter
 from django.shortcuts import get_object_or_404, redirect
 
 
+
+
+def redirect_to_recipe(request, short_code):
+    """
+    Перенаправляет на полный URL рецепта по короткому коду.
+    """
+    recipe = get_object_or_404(Recipe, short_code=short_code)
+    return redirect(f'/recipes/{recipe.id}')
+
 class UserViewSet(UserViewSet):
     serializer_class = UserSerializer
     pagination_class = LimitOffsetPagination
@@ -261,12 +270,4 @@ class SubscriptionViewSet(viewsets.ReadOnlyModelViewSet):
         Возвращает список подписок текущего пользователя.
         """
         return Subscription.objects.filter(user=self.request.user)
-
-
-def redirect_to_recipe(request, short_code):
-    """
-    Перенаправляет на полный URL рецепта по короткому коду.
-    """
-    recipe = get_object_or_404(Recipe, short_code=short_code)
-    return redirect(f'/recipes/{recipe.id}')
 
