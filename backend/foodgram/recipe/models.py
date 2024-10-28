@@ -149,4 +149,3 @@ class ShoppingCart(models.Model):
                 name='unique_user_recipe_cart'
             )
         ]
-
