@@ -13,7 +13,7 @@ class User(AbstractUser):
     last_name = models.CharField(max_length=20, verbose_name='Фамилия')
     email = models.EmailField(verbose_name='Почта', unique=True)
     avatar = models.ImageField(
-        upload_to='recipe/avatars/',
+        upload_to='users/avatars/',
         verbose_name='Аватар',
         blank=True,
         null=True
@@ -30,7 +30,7 @@ class User(AbstractUser):
 
 
 class Ingredient(models.Model):
-    name = models.CharField(max_length=50)
+    name = models.CharField(max_length=100)
     measurement_unit = models.CharField(max_length=10)
 
     def __str__(self):
@@ -125,7 +125,7 @@ class Subscription(models.Model):
     class Meta:
         constraints = [
             models.UniqueConstraint(
-                fields=('user', 'recipe'),
+                fields=('user', 'subsсribed_to'),
                 name='unique_user_subscribed_to'
             )
         ]
@@ -149,3 +149,4 @@ class ShoppingCart(models.Model):
                 name='unique_user_recipe_cart'
             )
         ]
+

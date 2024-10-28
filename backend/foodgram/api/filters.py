@@ -18,7 +18,7 @@ class NameFilter(django_filters.FilterSet):
 class NameAuthorFilter(django_filters.FilterSet):
 
     author = django_filters.NumberFilter(lookup_expr='id__exact')
-    tags = django_filters.NumberFilter(lookup_expr='slug__exact')
+    tags = django_filters.CharFilter(lookup_expr='slug__exact')
 
     class Meta:
         model = Recipe

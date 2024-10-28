@@ -1,7 +1,7 @@
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, redirect
 from djoser.views import UserViewSet
 from rest_framework.pagination import LimitOffsetPagination
 from django_filters.rest_framework import DjangoFilterBackend
@@ -193,5 +193,9 @@ class RecipeViewSet(viewsets.ModelViewSet):
     @action(methods=['get'], detail=True, url_path='get-link')
     def short(self, request, pk=None):
         short = get_object_or_404(Recipe, pk=pk).short
-        short = request.build_absolute_uri(f'/s/{short}')
+        short = request.build_absolute_uri(f'/api/s/{short}')
         return Response({'short-link': short})
+
+def url(request, short):
+    recipe = get_object_or_404(Recipe, short=short)
+    return redirect(f'/recipes/{recipe.id}')
