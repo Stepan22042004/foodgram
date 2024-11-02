@@ -183,11 +183,11 @@ class ShowRecipeSerializer(serializers.ModelSerializer):
             "name", "image", "text", "cooking_time"
         )
 
-     def get_is_favorited(self, obj):
+    def get_is_favorited(self, obj):
         if (self.context.get('request').user.is_authenticated
             and Favorite.objects.filter(
-                recipe=obj,
-                user=self.context.get('request').user
+            recipe=obj,
+            user=self.context.get('request').user
         ).exists()):
             return True
         return False
@@ -200,6 +200,7 @@ class ShowRecipeSerializer(serializers.ModelSerializer):
         ).exists()):
             return True
         return False
+
 
 class NewRecipeSerializer(serializers.ModelSerializer):
     tags = serializers.PrimaryKeyRelatedField(
