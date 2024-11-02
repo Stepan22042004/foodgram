@@ -19,12 +19,11 @@ class UserSerializer(serializers.ModelSerializer):
 
     def get_is_subscribed(self, obj):
         request = self.context.get('request')
-        if request and \
-           request.user.is_authenticated and Subscription.objects.filter(
-                user=request.user, subsсribed_to=obj).exists():
+        if (request
+            and request.user.is_authenticated and Subscription.objects.filter(
+                user=request.user, subsсribed_to=obj).exists()):
             return True
-        else:
-            return False
+        return False
 
 
 class PutAvatarSerializer(serializers.ModelSerializer):
@@ -75,18 +74,26 @@ class RecipesForSubscriptionSerializer(serializers.ModelSerializer):
 
 class NewSubscribeSerializer(serializers.Serializer):
 
-    def save(self, **kwargs):
+    def validate(self, data):
         user = self.context.get('request').user
         follower = self.context.get('subscribe_to')
         if user == follower:
             raise ValidationError("Нельзя подписаться на самого себя")
-        subscription, created = Subscription.objects.get_or_create(
+
+        if Subscription.objects.filter(
+            user=user,
+            subsсribed_to=follower
+        ).exists():
+            raise ValidationError("Подписка уже существует")
+        return data
+
+    def save(self, **kwargs):
+        user = self.context.get('request').user
+        follower = self.context.get('subscribe_to')
+        subscription, created = Subscription.objects.create(
             user=user,
             subsсribed_to=follower
         )
-        if not created:
-            raise ValidationError("Подписка уже существует")
-
         return subscription
 
     def to_representation(self, instance):
@@ -94,9 +101,7 @@ class NewSubscribeSerializer(serializers.Serializer):
         user_data = UserSerializer(follower, context=self.context).data
         recipes = follower.recipes.all()
         param = self.context.get('request').query_params.get('recipes_limit')
-        if param is None:
-            pass
-        else:
+        if param is not None:
             recipes = recipes[0:int(param)]
         recipes = RecipesForSubscriptionSerializer(
             recipes, many=True, context=self.context
@@ -119,9 +124,7 @@ class SubscriptionSerializer(serializers.ModelSerializer):
     def get_recipes(self, obj):
         recipes = obj.subsсribed_to.recipes.all()
         param = self.context.get('request').query_params.get('recipes_limit')
-        if param is None:
-            pass
-        else:
+        if param is not None:
             recipes = recipes[0:int(param)]
         recipes = RecipesForSubscriptionSerializer(
             recipes,
@@ -181,21 +184,21 @@ class ShowRecipeSerializer(serializers.ModelSerializer):
         )
 
     def get_is_favorited(self, obj):
-        if self.context.get('request').user.is_authenticated and \
-            Favorite.objects.filter(
+        if (self.context.get('request').user.is_authenticated
+            and Favorite.objects.filter(
                 recipe=obj,
                 user=self.context.get('request').user
-        ).exists():
+        ).exists()):
             return True
         else:
             return False
 
     def get_is_in_shopping_cart(self, obj):
-        if self.context.get('request').user.is_authenticated and \
-            ShoppingCart.objects.filter(
+        if (self.context.get('request').user.is_authenticated
+            and ShoppingCart.objects.filter(
                 recipe=obj,
                 user=self.context.get('request').user
-        ).exists():
+        ).exists()):
             return True
         else:
             return False
@@ -211,7 +214,7 @@ class NewRecipeSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Recipe
-        fields = ('ingredients', 'tags', 'image',
+        fields = ('id', 'ingredients', 'tags', 'image',
                   'name', 'text', 'cooking_time',)
 
     def validate(self, data):
@@ -224,7 +227,7 @@ class NewRecipeSerializer(serializers.ModelSerializer):
             list_of_ingredient_names.append(ingredients[i]['ingredient'])
 
         if len(ingredients) == 0:
-            raise ValidationError('В рецепте нет инградиентов')
+            raise ValidationError('В рецепте нет ингредиентов')
 
         if len(image) == 0:
             raise ValidationError('Нет картинки')
@@ -236,7 +239,7 @@ class NewRecipeSerializer(serializers.ModelSerializer):
             raise ValidationError('Есть одинаковые теги')
 
         if len(list_of_ingredient_names) != len(set(list_of_ingredient_names)):
-            raise ValidationError('Есть одинаковые инградиенты')
+            raise ValidationError('Есть одинаковые ингредиенты')
 
         return data
 

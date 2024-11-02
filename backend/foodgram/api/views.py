@@ -42,11 +42,10 @@ class UserViewSet(UserViewSet):
             serializer.is_valid(raise_exception=True)
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
-        else:
-            user = request.user
-            user.avatar = None
-            user.save()
-            return Response(status=status.HTTP_204_NO_CONTENT)
+        user = request.user
+        user.avatar = None
+        user.save()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
     @action(
         methods=['post', 'delete'],
@@ -64,18 +63,17 @@ class UserViewSet(UserViewSet):
             serializer.is_valid(raise_exception=True)
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
-        else:
-            subscribed_to_user = get_object_or_404(User, id=id)
-            subscription = get_object_or_404(
-                Subscription,
-                user=request.user,
-                subsсribed_to=subscribed_to_user
-            )
-            subscription.delete()
-            return Response(
-                {'detail': 'Успешная отписка'},
-                status=status.HTTP_204_NO_CONTENT
-            )
+        subscribed_to_user = get_object_or_404(User, id=id)
+        subscription = get_object_or_404(
+            Subscription,
+            user=request.user,
+            subsсribed_to=subscribed_to_user
+        )
+        subscription.delete()
+        return Response(
+            {'detail': 'Успешная отписка'},
+            status=status.HTTP_204_NO_CONTENT
+        )
 
 
 class TagViewSet(viewsets.ReadOnlyModelViewSet):
@@ -111,10 +109,9 @@ class RecipeViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthorOrReadOnly]
 
     def get_serializer_class(self):
-        if self.action == 'create' or self.action == 'partial_update':
+        if self.action in ('create', 'partial_update',):
             return NewRecipeSerializer
-        else:
-            return ShowRecipeSerializer
+        return ShowRecipeSerializer
 
     @action(
         methods=['post', 'delete'],
@@ -132,15 +129,14 @@ class RecipeViewSet(viewsets.ModelViewSet):
             serializer.is_valid(raise_exception=True)
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
-        else:
-            recipe = get_object_or_404(Recipe, pk=pk)
-            favorite = get_object_or_404(
-                Favorite,
-                user=request.user,
-                recipe=recipe
-            )
-            favorite.delete()
-            return Response(status=status.HTTP_204_NO_CONTENT)
+        recipe = get_object_or_404(Recipe, pk=pk)
+        favorite = get_object_or_404(
+            Favorite,
+            user=request.user,
+            recipe=recipe
+        )
+        favorite.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
     @action(
         methods=['post', 'delete'],
