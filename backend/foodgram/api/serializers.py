@@ -90,7 +90,7 @@ class NewSubscribeSerializer(serializers.Serializer):
     def save(self, **kwargs):
         user = self.context.get('request').user
         follower = self.context.get('subscribe_to')
-        subscription, created = Subscription.objects.create(
+        subscription = Subscription.objects.create(
             user=user,
             subsсribed_to=follower
         )
