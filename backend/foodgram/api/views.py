@@ -108,7 +108,8 @@ class RecipeViewSet(viewsets.ModelViewSet):
     filterset_class = NameAuthorFilter
     permission_classes = [IsAuthorOrReadOnly]
 
-    def custom_action(self, request, model, model_serializer, pk):
+    @staticmethod
+    def custom_action(request, model, model_serializer, pk):
         if request.method == 'POST':
             recipe = get_object_or_404(Recipe, pk=pk)
             data = {'user': request.user.id, 'recipe': recipe.id}
