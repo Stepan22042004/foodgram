@@ -79,7 +79,7 @@ class Recipe(models.Model):
         null=True,
         unique=True,
     )
-    ingredient = models.ManyToManyField(
+    ingredients = models.ManyToManyField(
         Ingredient,
         through='RecipeIngredient',
         verbose_name='Ингредиенты'
@@ -112,7 +112,7 @@ class RecipeIngredient(models.Model):
         related_name='recipe_ingredient',
         verbose_name='Ингредиент'
     )
-    amount = models.PositiveIntegerField()
+    amount = models.PositiveIntegerField(verbose_name='Количество')
 
     class Meta:
         constraints = [

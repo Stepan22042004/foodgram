@@ -108,6 +108,27 @@ class RecipeViewSet(viewsets.ModelViewSet):
     filterset_class = NameAuthorFilter
     permission_classes = [IsAuthorOrReadOnly]
 
+    def custom_action(self, request, model, model_serializer, pk):
+        if request.method == 'POST':
+            recipe = get_object_or_404(Recipe, pk=pk)
+            data = {'user': request.user.id, 'recipe': recipe.id}
+            serializer = model_serializer(
+                data=data,
+                context={'request': request}
+            )
+            serializer.is_valid(raise_exception=True)
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            recipe = get_object_or_404(Recipe, pk=pk)
+            obj = get_object_or_404(
+                model,
+                user=request.user,
+                recipe=recipe
+            )
+            obj.delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+
     def get_serializer_class(self):
         if self.action in ('create', 'partial_update',):
             return NewRecipeSerializer
@@ -119,24 +140,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
         permission_classes=(IsAuthenticated,)
     )
     def favorite(self, request, pk=None):
-        if request.method == 'POST':
-            recipe = get_object_or_404(Recipe, pk=pk)
-            data = {'user': request.user.id, 'recipe': recipe.id}
-            serializer = FavoriteSerializer(
-                data=data,
-                context={'request': request}
-            )
-            serializer.is_valid(raise_exception=True)
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        recipe = get_object_or_404(Recipe, pk=pk)
-        favorite = get_object_or_404(
-            Favorite,
-            user=request.user,
-            recipe=recipe
-        )
-        favorite.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        self.custom_action(request, Favorite, FavoriteSerializer, pk)
 
     @action(
         methods=['post', 'delete'],
@@ -145,25 +149,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
         permission_classes=(IsAuthenticated,)
     )
     def cart(self, request, pk=None):
-        if request.method == 'POST':
-            recipe = get_object_or_404(Recipe, pk=pk)
-            data = {'user': request.user.id, 'recipe': recipe.id}
-            serializer = CartSerializer(
-                data=data,
-                context={'request': request}
-            )
-            serializer.is_valid(raise_exception=True)
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        else:
-            recipe = get_object_or_404(Recipe, pk=pk)
-            cart = get_object_or_404(
-                ShoppingCart,
-                user=request.user,
-                recipe=recipe
-            )
-            cart.delete()
-            return Response(status=status.HTTP_204_NO_CONTENT)
+        self.custom_action(request, ShoppingCart, CartSerializer, pk)
 
     @action(
         methods=['get'],
