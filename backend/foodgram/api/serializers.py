@@ -164,8 +164,8 @@ class IngredientInRecipeSerializer(serializers.ModelSerializer):
 
 
 class ShowRecipeSerializer(serializers.ModelSerializer):
-    is_favorited = serializers.SerializerMethodField()
-    is_in_shopping_cart = serializers.SerializerMethodField()
+    is_favorited = serializers.SerializerMethodField(read_only=True)
+    is_in_shopping_cart = serializers.SerializerMethodField(read_only=True)
     author = UserSerializer()
     tags = TagSerializer(read_only=True, many=True)
     ingredients = IngredientInRecipeSerializer(
@@ -183,18 +183,23 @@ class ShowRecipeSerializer(serializers.ModelSerializer):
             "name", "image", "text", "cooking_time"
         )
 
-    def _is_user_related_to_object(self, obj, model):
-        user = self.context.get('request').user
-        if user.is_authenticated:
-            return model.objects.filter(recipe=obj, user=user).exists()
-        return False
-
     def get_is_favorited(self, obj):
-        return self._is_user_related_to_object(obj, Favorite)
+        request = self.context.get('request')
+        return (
+            request
+            and request.user.is_authenticated
+            and Favorite.objects.filter(user=request.user, recipe=obj).exists()
+        )
 
     def get_is_in_shopping_cart(self, obj):
-        return self._is_user_related_to_object(obj, ShoppingCart)
-
+        request = self.context.get('request')
+        return (
+            request
+            and request.user.is_authenticated
+            and ShoppingCart.objects.filter(
+                user=request.user, recipe=obj
+            ).exists()
+        )
 
 class NewRecipeSerializer(serializers.ModelSerializer):
     tags = serializers.PrimaryKeyRelatedField(
