@@ -182,6 +182,7 @@ class ShowRecipeSerializer(serializers.ModelSerializer):
             "is_in_shopping_cart",
             "name", "image", "text", "cooking_time"
         )
+
     def _is_user_related_to_object(self, obj, model):
         user = self.context.get('request').user
         if user.is_authenticated:
