@@ -133,14 +133,14 @@ class Favorite(models.Model):
         Recipe,
         on_delete=models.CASCADE,
         verbose_name='Рецепт',
-	related_name='favorites'
+        related_name='favorites'
     )
 
     class Meta:
         constraints = [
             models.UniqueConstraint(
                 fields=('user', 'recipe'),
-		name='unique_user_recipe_favorite'
+                name='unique_user_recipe_favorite'
             )
         ]
         verbose_name = 'Избранное'
