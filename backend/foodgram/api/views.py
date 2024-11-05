@@ -119,16 +119,15 @@ class RecipeViewSet(viewsets.ModelViewSet):
             )
             serializer.is_valid(raise_exception=True)
             serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        else:
-            recipe = get_object_or_404(Recipe, pk=pk)
-            obj = get_object_or_404(
-                model,
-                user=request.user,
-                recipe=recipe
-            )
-            obj.delete()
-            return Response(status=status.HTTP_204_NO_CONTENT)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+        recipe = get_object_or_404(Recipe, pk=pk)
+        obj = get_object_or_404(
+            model,
+            user=request.user,
+            recipe=recipe
+        )
+        obj.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
     def get_serializer_class(self):
         if self.action in ('create', 'partial_update',):
