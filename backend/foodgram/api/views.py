@@ -79,11 +79,13 @@ class UserViewSet(UserViewSet):
 
 class TagViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Tag.objects.all()
+    pagination_class = None
     serializer_class = TagSerializer
 
 
 class IngredientViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Ingredient.objects.all()
+    pagination_class = None
     serializer_class = IngredientSerializer
     filter_backends = [
         DjangoFilterBackend,
