@@ -1,4 +1,5 @@
 import django_filters
+from django_filters.rest_framework import filters
 
 from recipe.models import Ingredient, Recipe
 
@@ -18,7 +19,7 @@ class NameFilter(django_filters.FilterSet):
 class NameAuthorFilter(django_filters.FilterSet):
 
     author = django_filters.NumberFilter(lookup_expr='id__exact')
-    tags = django_filters.CharFilter(lookup_expr='slug__exact')
+    tags = filters.AllValuesMultipleFilter(field_name='tags__slug')
     is_favorited = django_filters.rest_framework.filters.BooleanFilter(
         method='favorited'
     )
