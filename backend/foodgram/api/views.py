@@ -8,6 +8,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 from django.http import HttpResponse
 from django.db.models import Sum
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.pagination import PageNumberPagination
 
 from api.permissions import IsAuthorOrReadOnly
 from api.filters import NameFilter, NameAuthorFilter
@@ -101,7 +102,7 @@ class SubscriptionViewSet(viewsets.ModelViewSet):
 
 class RecipeViewSet(viewsets.ModelViewSet):
     queryset = Recipe.objects.all()
-    pagination_class = LimitOffsetPagination
+    pagination_class = PageNumberPagination
     filter_backends = [
         DjangoFilterBackend,
     ]
