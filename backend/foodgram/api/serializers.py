@@ -177,9 +177,8 @@ class ShowRecipeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Recipe
         fields = (
-            "id", "tags", "author", "ingredients", "is_favorited",
-            "is_in_shopping_cart",
-            "name", "image", "text", "cooking_time"
+             'id', 'name', 'image', 'text', 'cooking_time', 'author', 'tags',
+            'ingredients', 'is_favorited', 'is_in_shopping_cart'
         )
 
     def _is_user_related_to_object(self, obj, model):
