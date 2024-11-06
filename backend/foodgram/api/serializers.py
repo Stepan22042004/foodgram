@@ -177,7 +177,7 @@ class ShowRecipeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Recipe
         fields = (
-             'id', 'name', 'image', 'text', 'cooking_time', 'author', 'tags',
+            'id', 'name', 'image', 'text', 'cooking_time', 'author', 'tags',
             'ingredients', 'is_favorited', 'is_in_shopping_cart'
         )
 
@@ -219,7 +219,7 @@ class NewRecipeSerializer(serializers.ModelSerializer):
         if ingredients is None:
             raise ValidationError('В рецепте нет ингредиентов')
 
-        if self.request.method == 'POST':
+        if self.context.get('request').method == 'POST':
             if image is None:
                 raise ValidationError('Нет картинки')
 
