@@ -164,8 +164,8 @@ class IngredientInRecipeSerializer(serializers.ModelSerializer):
 
 
 class ShowRecipeSerializer(serializers.ModelSerializer):
-    is_favorited = serializers.SerializerMethodField(read_only=True)
-    is_in_shopping_cart = serializers.SerializerMethodField(read_only=True)
+    is_favorited = serializers.SerializerMethodField()
+    is_in_shopping_cart = serializers.SerializerMethodField()
     author = UserSerializer()
     tags = TagSerializer(read_only=True, many=True)
     ingredients = IngredientInRecipeSerializer(
@@ -202,7 +202,7 @@ class NewRecipeSerializer(serializers.ModelSerializer):
         queryset=Tag.objects.all()
     )
     ingredients = IngredientInRecipeSerializer(many=True, required=True)
-    image = Base64ImageField(required=True)
+    image = Base64ImageField()
 
     class Meta:
         model = Recipe
@@ -212,7 +212,6 @@ class NewRecipeSerializer(serializers.ModelSerializer):
     def validate(self, data):
         tags = data.get('tags')
         ingredients = data.get('ingredients')
-        image = data.get('image')
         list_of_ingredient_names = []
 
         for ingredient in ingredients:
@@ -220,9 +219,6 @@ class NewRecipeSerializer(serializers.ModelSerializer):
 
         if ingredients is None:
             raise ValidationError('В рецепте нет ингредиентов')
-
-        if image is None:
-            raise ValidationError('Нет картинки')
 
         if tags is None:
             raise ValidationError('Нет тегов')
