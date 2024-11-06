@@ -122,7 +122,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
             )
             serializer.is_valid(raise_exception=True)
             serializer.save()
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
         recipe = get_object_or_404(Recipe, pk=pk)
         obj = get_object_or_404(
             model,
@@ -171,7 +171,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
         for ingredient in ingredients:
             response.write(
                 (f"{ingredient.name}, кол-во"
-                 f" {ingredient.total} {ingredient.measurement_unit}")
+                 f" {ingredient.total} {ingredient.measurement_unit}\n")
             )
         return response
 
