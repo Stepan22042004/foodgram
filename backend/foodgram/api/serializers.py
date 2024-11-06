@@ -166,7 +166,7 @@ class IngredientInRecipeSerializer(serializers.ModelSerializer):
 class ShowRecipeSerializer(serializers.ModelSerializer):
     is_favorited = serializers.SerializerMethodField(read_only=True)
     is_in_shopping_cart = serializers.SerializerMethodField(read_only=True)
-    author = UserSerializer()
+    author = UserSerializer(read_only=True)
     tags = TagSerializer(read_only=True, many=True)
     ingredients = IngredientInRecipeSerializer(
         source='ingredients_in_recipe',
@@ -205,7 +205,7 @@ class NewRecipeSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Recipe
-        fields = ('id', 'ingredients', 'tags', 'image',
+        fields = ('ingredients', 'tags', 'image',
                   'name', 'text', 'cooking_time',)
 
     def validate(self, data):
