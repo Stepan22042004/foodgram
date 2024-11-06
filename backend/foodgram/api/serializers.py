@@ -219,8 +219,9 @@ class NewRecipeSerializer(serializers.ModelSerializer):
         if ingredients is None:
             raise ValidationError('В рецепте нет ингредиентов')
 
-        if image is None:
-            raise ValidationError('Нет картинки')
+        if self.request.method == 'POST':
+            if image is None:
+                raise ValidationError('Нет картинки')
 
         if tags is None:
             raise ValidationError('Нет тегов')
