@@ -173,7 +173,6 @@ class ShowRecipeSerializer(serializers.ModelSerializer):
         many=True,
         read_only=True
     )
-    image = Base64ImageField()
 
     class Meta:
         model = Recipe
