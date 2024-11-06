@@ -210,6 +210,7 @@ class NewRecipeSerializer(serializers.ModelSerializer):
     def validate(self, data):
         tags = data.get('tags')
         ingredients = data.get('ingredients')
+        image = data.get('image')
         list_of_ingredient_names = []
 
         for ingredient in ingredients:
@@ -217,6 +218,9 @@ class NewRecipeSerializer(serializers.ModelSerializer):
 
         if ingredients is None:
             raise ValidationError('В рецепте нет ингредиентов')
+
+        if image is None:
+            raise ValidationError('Нет картинки')
 
         if tags is None:
             raise ValidationError('Нет тегов')
@@ -256,7 +260,7 @@ class NewRecipeSerializer(serializers.ModelSerializer):
         ingredients_list = validated_data.pop('ingredients')
         tags = validated_data.pop('tags')
         super().update(instance, validated_data)
-        instance.ingredient.clear()
+        instance.ingredients.clear()
         instance.tags.set(tags)
         self.create_ingredients(instance, ingredients_list)
         return instance
