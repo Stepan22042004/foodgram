@@ -202,7 +202,7 @@ class NewRecipeSerializer(serializers.ModelSerializer):
         queryset=Tag.objects.all()
     )
     ingredients = IngredientInRecipeSerializer(many=True, required=True)
-    image = Base64ImageField()
+    image = Base64ImageField(required=True)
 
     class Meta:
         model = Recipe
