@@ -9,8 +9,6 @@ from django.http import HttpResponse
 from django.db.models import Sum
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.pagination import PageNumberPagination
-import pyperclip
-
 
 from api.permissions import IsAuthorOrReadOnly
 from api.filters import NameFilter, NameAuthorFilter
@@ -180,9 +178,8 @@ class RecipeViewSet(viewsets.ModelViewSet):
     @action(methods=['get'], detail=True, url_path='get-link')
     def short(self, request, pk=None):
         short = get_object_or_404(Recipe, pk=pk).short
-        short = request.build_absolute_uri(f'/api/s/{short}')
-        pyperclip.copy(short)
-        return Response({'short-link': short})
+        link = request.build_absolute_uri(f'/api/s/{short}')
+        return Response({'short-link': link})
 
 
 def url(request, short):
